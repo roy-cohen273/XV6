@@ -259,6 +259,11 @@ ifeq ($(LAB),util)
 	UEXTRA += user/xargstest.sh
 endif
 
+ifeq ($(LAB),syscall)
+UPROGS += \
+	$U/_trace
+endif
+
 
 fs.img: mkfs/mkfs README $(UEXTRA) $(UPROGS)
 	mkfs/mkfs fs.img README $(UEXTRA) $(UPROGS)
