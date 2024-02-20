@@ -193,7 +193,8 @@ UPROGS=\
 
 ifeq ($(LAB),util)
 UPROGS += \
-	$U/_sleep
+	$U/_sleep\
+	$U/_pingpong
 endif
 
 ifeq ($(LAB),$(filter $(LAB), lock))
