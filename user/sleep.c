@@ -7,6 +7,7 @@ main(int argc, char *argv[])
 {
     if (argc != 2) {
         printf("USAGE: %s <amount>\nSleeps for the specified amount of ticks.", argv[0]);
+        exit(1);
     }
 
     int ticks = atoi(argv[1]);
