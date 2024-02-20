@@ -17,12 +17,11 @@ generate_pipe(int *pread, int *pwrite) {
 }
 
 /**
- * code for child process, given the pipe to the parent process.
+ * code for child process, given the pipe to read from.
 */
 void
-child_main(int pread, int pwrite)
+child_main(int pread)
 {
-    close(pwrite);
     int n;
     if (!read(pread, &n, sizeof n)) {
         close(pread);
@@ -32,7 +31,9 @@ child_main(int pread, int pwrite)
     int new_pread, new_pwrite;
     generate_pipe(&new_pread, &new_pwrite);
     if (fork() == 0) {
-        child_main(new_pread, new_pwrite);
+        close(pread);
+        close(new_pwrite);
+        child_main(new_pread);
     }
     close(new_pread);
     int i;
@@ -54,7 +55,8 @@ main(int argc, char *argv[])
     generate_pipe(&pread, &pwrite);
 
     if (fork() == 0) {
-        child_main(pread, pwrite);
+        close(pwrite);
+        child_main(pread);
     }
 
     close(pread);
