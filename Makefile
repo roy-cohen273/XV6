@@ -191,6 +191,10 @@ UPROGS=\
 
 
 
+ifeq ($(LAB),util)
+UPROGS += \
+	$U/_sleep
+endif
 
 ifeq ($(LAB),$(filter $(LAB), lock))
 UPROGS += \
