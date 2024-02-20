@@ -4,24 +4,64 @@
 
 #define MAX_NUMBER 35
 
+/**
+ * Generates a pipe and stores the read & write ends of the pipe in `pread` & `pwrite`.
+*/
+int
+generate_pipe(int *pread, int *pwrite) {
+    int p[2];
+    int result = pipe(p);
+    *pread = p[0];
+    *pwrite = p[1];
+    return result;
+}
+
+/**
+ * code for child process, given the pipe to the parent process.
+*/
+void
+child_main(int pread, int pwrite)
+{
+    close(pwrite);
+    int n;
+    if (!read(pread, &n, sizeof n)) {
+        close(pread);
+        exit(0);
+    }
+    printf("prime %d\n", n);
+    int new_pread, new_pwrite;
+    generate_pipe(&new_pread, &new_pwrite);
+    if (fork() == 0) {
+        child_main(new_pread, new_pwrite);
+    }
+    close(new_pread);
+    int i;
+    while (read(pread, &i, sizeof i)) {
+        if (i % n != 0) {
+            write(new_pwrite, &i, sizeof i);
+        }
+    }
+    close(new_pwrite);
+    close(pread);
+    wait(0);
+    exit(0);
+}
+
 int
 main(int argc, char *argv[])
 {
-    int p[2];
-    pipe(p);
+    int pread, pwrite;
+    generate_pipe(&pread, &pwrite);
 
     if (fork() == 0) {
-        // TODO: finish writing this
-        close(p[1]);
-        exit(0);
+        child_main(pread, pwrite);
     }
 
-    close(p[0]);
+    close(pread);
     for (int i = 2; i <= MAX_NUMBER; i++) {
-        write(p[1], &i, sizeof i);
+        write(pwrite, &i, sizeof i);
     }
-    close(p[1]);
+    close(pwrite);
     wait(0);
-
     exit(0);
 }
