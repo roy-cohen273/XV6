@@ -195,7 +195,8 @@ ifeq ($(LAB),util)
 UPROGS += \
 	$U/_sleep\
 	$U/_pingpong\
-	$U/_primes
+	$U/_primes\
+	$U/_find
 endif
 
 ifeq ($(LAB),$(filter $(LAB), lock))
