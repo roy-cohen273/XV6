@@ -115,7 +115,6 @@ sys_sysinfo(void)
 
   argaddr(0, &addr);
 
-  // TODO: fill with actual values
   sysinfo.freemem = freemem();
   sysinfo.nproc = proc_count();
 
