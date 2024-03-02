@@ -6,6 +6,7 @@
 #include "spinlock.h"
 #include "proc.h"
 #include "sysinfo.h"
+#include "kalloc.h"
 
 uint64
 sys_exit(void)
@@ -115,8 +116,8 @@ sys_sysinfo(void)
   argaddr(0, &addr);
 
   // TODO: fill with actual values
-  sysinfo.freemem = 0;
-  sysinfo.nproc = 0;
+  sysinfo.freemem = freemem();
+  sysinfo.nproc = proc_count();
 
   struct proc *p = myproc();
   if (copyout(p->pagetable, addr, (char *)&sysinfo, sizeof(sysinfo)) < 0) {

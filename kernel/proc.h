@@ -106,3 +106,8 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
 };
+
+// Returns the number of running processes.
+// That is, the number of precesses whose state is not UNUSED
+uint64
+proc_count();
