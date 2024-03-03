@@ -71,10 +71,26 @@ sys_sleep(void)
 
 
 #ifdef LAB_PGTBL
-int
+uint64
 sys_pgaccess(void)
 {
-  // lab pgtbl: your code here.
+  uint64 va;
+  argaddr(0, &va);
+
+  int pages;
+  argint(1, &pages);
+  if (pages < 0 || pages > 64) {
+    return -1;
+  }
+
+  uint64 user_buf;
+  argaddr(2, &user_buf);
+
+  pagetable_t pagetable = myproc()->pagetable;
+  uint64 buf = pgaccess(pagetable, va, pages);
+  if (copyout(pagetable, user_buf, (char *)&buf, pages / 8) < 0) {
+    return -1;
+  }
   return 0;
 }
 #endif

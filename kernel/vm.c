@@ -465,3 +465,18 @@ vmprint(pagetable_t pagetable)
   printf("page table %p\n", pagetable);
   print_entries(pagetable, 1);
 }
+
+// Returns pagetable access info
+uint64
+pgaccess(pagetable_t pagetable, uint64 va, int pages)
+{
+  uint64 buf = 0;
+  for (int i = 0; i < pages; i++) {
+    pte_t *pte = walk(pagetable, va + i*PGSIZE, 0);
+    if (pte != 0 && (*pte & PTE_A)) {
+      *pte &= ~PTE_A;
+      buf |= 1L << i;
+    }
+  }
+  return buf;
+}
