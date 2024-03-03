@@ -1,0 +1,10 @@
+1. The `wait` syscall could be made faster using the shared page.
+   The shared page would the store a boolean value indicating whether the child process
+   has already finished. And if it did, it will also store the exit status.
+   Then, when a user program wants to call `wait()`, it first checks in the shared page.
+   Only if it sees that the child process has not already finished, it makes the syscall.
+   That is, the syscall is prevented in some cases.
+2. The pages we see are at the very bottom and very top of the virtual memory.
+   According to Figure 3.4, those correspond to the text section and kernel reserved pages
+   (i.e. trampoline and trapframe).
+   The program could read, but not write, to page 1. Because it is marked `PTE_U | PTE_R`.
