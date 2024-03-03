@@ -1,0 +1,11 @@
+1. From the backtrace, the function that called `syscall()` is `usertrap()` from `kernel/trap.c`.
+2. The value of `p->trapframe->a7` is 7. It indicates what function `syscall` should run.
+   In our case, function number 7 is `exec`.
+3. Before the call to `syscall`, the CPU was in user-mode.
+   After it executed the `ecall` instruction it transitioned to supervisor-mode.
+4. The assembly instruction that caused the panic was: `lw a3, 0(zero)`
+   The variable `num` corresponds to the `a7` register.
+5. The kernel crashes because of an illegal memory access.
+   Address 0 is not mapped in the kernel's page table.
+   That is confirmed by `scause` which indicates the the error was of type "load page fault".
+6. The file that was running was "initcode". The PID was 1.
