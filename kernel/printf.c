@@ -141,9 +141,9 @@ void
 backtrace(void)
 {
   printf("backtrace:\n");
-  uint64 kernal_stack_page = PGROUNDDOWN(myproc()->kstack);
+  uint64 kernel_stack_page = PGROUNDDOWN(myproc()->kstack);
   uint64 *fp = (uint64 *)r_fp();
-  while (PGROUNDDOWN((uint64)fp) == kernal_stack_page) {
+  while (PGROUNDDOWN((uint64)fp) == kernel_stack_page) {
     printf("%p\n", fp[-1]);
     fp = (uint64 *)(fp[-2]);
   }
