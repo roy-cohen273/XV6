@@ -1,0 +1,8 @@
+1. Registers `a_` hold arguments to functions.
+   For example, `a2` holds the argument `13` to `printf` in `main`.
+2. The compiler saw that the result of `f(8)+1` will be 12 and produce no side effect.
+   So it replaced this expression with the literal `12`.
+3. 0x642
+4. The `jal` instruction writes the address of the next instruction to `ra`.
+5. He110 World
+6. It will print the value that was at the top of the stack before the call to `printf`.
