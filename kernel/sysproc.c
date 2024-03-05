@@ -93,3 +93,39 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_sigalarm(void)
+{
+  int ticks;
+  argint(0, &ticks);
+
+  void (*handler)();
+  argaddr(1, (uint64 *)&handler);
+
+  struct proc *p = myproc();
+  if (ticks == 0 && handler == 0) {
+    p->alarm.ticks_left = 0;
+  } else {
+    p->alarm.handler = handler;
+    p->alarm.ticks = ticks;
+    p->alarm.ticks_left = ticks;
+  }
+  return 0;
+}
+
+uint64
+sys_sigreturn(void)
+{
+  struct proc *p = myproc();
+
+  // reset ticks counter
+  p->alarm.ticks_left = p->alarm.ticks;
+
+  // restore the original trapframe
+  memmove(p->trapframe, p->alarm.return_trapframe, sizeof(*p->alarm.return_trapframe));
+
+  // the value we return here overrides p->trapframe->a0 by syscall()
+  // we don't want this to happen, so we do this hack
+  return p->trapframe->a0;
+}
