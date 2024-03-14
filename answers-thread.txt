@@ -1,0 +1,5 @@
+1. a) Two threads putting the same key at the same time could both see that the key is not already present, and both insert a new entry.
+      This will lead to two entries with the same key.
+   b) Two threads inserting to the same bucket at the same time could pass the same `n` argument to `insert`.
+      This will lead to the first thread's entry to be 'forgotten'.
+      Also, if we later add code to de-allocate the entries, it will miss the first thread's entry.
